@@ -39,5 +39,9 @@ app.post("/generate", async (req, res) => {
     }
 });
 
+app.get('/', (req, res) => {
+    res.send('Сервер CalmSea работает успешно');
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
