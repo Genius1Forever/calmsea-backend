@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 app.post("/generate", async (req, res) => {
     const { notes } = req.body;
@@ -15,8 +15,8 @@ app.post("/generate", async (req, res) => {
     const prompt = `Ты — профессиональный психолог. Проанализируй следующие записи дневника и предложи 2-3 краткие рекомендации для улучшения эмоционального состояния:\n\n${notes.join("\n")}`;
 
     try {
-        const response = await axios.post("https://api.openai.com/v1/chat/completions", {
-            model: "gpt-3.5-turbo",
+        const response = await axios.post("https://openrouter.ai/api/v1/chat/completions", {
+            model: "mistralai/mistral-7b-instruct", // Можно заменить на другую модель
             messages: [
                 { role: "system", content: "Ты — эмпатичный психолог." },
                 { role: "user", content: prompt }
@@ -25,8 +25,10 @@ app.post("/generate", async (req, res) => {
             temperature: 0.7
         }, {
             headers: {
-                "Authorization": `Bearer ${OPENAI_API_KEY}`,
-                "Content-Type": "application/json"
+                "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+                "Content-Type": "application/json",
+                "Referer": "https://calmsea-backend.onrender.com",
+                "X-Title": "CalmSea Recommender"
             }
         });
 
@@ -45,3 +47,4 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
